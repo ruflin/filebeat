@@ -27,7 +27,7 @@ func TestGetOSFileStateStat(t *testing.T) {
 	file, err := ioutil.TempFile("", "")
 	assert.Nil(t, err)
 
-	fileinfo, err := os.Stat(file)
+	fileinfo, err := os.Stat(file.Name())
 	assert.Nil(t, err)
 
 	state := GetOSFileState(&fileinfo)
