@@ -20,3 +20,17 @@ func TestGetOSFileState(t *testing.T) {
 	assert.True(t, state.IdxLo > 0)
 	assert.True(t, state.Vol > 0)
 }
+
+func TestGetOSFileStateStat(t *testing.T) {
+	file, err := ioutil.TempFile("", "")
+	assert.Nil(t, err)
+
+	fileinfo, err := os.Stat(file)
+	assert.Nil(t, err)
+
+	state := GetOSFileState(&fileinfo)
+
+	assert.True(t, state.IdxHi > 0)
+	assert.True(t, state.IdxLo > 0)
+	assert.True(t, state.Vol > 0)
+}
