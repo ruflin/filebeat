@@ -23,7 +23,8 @@
 
 # List of all platforms types. Comment out (with #) any platforms that you want
 # go-build-all to ignore.
-PLATFORMS="
+# If you want to build only a specific platform, set the PLATFORMS variable
+: ${PLATFORMS:="
 linux-386
 linux-386-387
 linux-arm-arm5
@@ -52,7 +53,7 @@ openbsd-arm
 #solaris-amd64
 windows-386
 windows-amd64
-"
+"}
 
 # Build for all platforms. Any failures will be reported at the end.
 function go-build-all {
