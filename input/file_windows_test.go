@@ -16,7 +16,7 @@ func TestGetOSFileState(t *testing.T) {
 
 	state := GetOSFileState(&fileinfo)
 
-	assert.True(t, satte.IdxHi > 0)
+	assert.True(t, state.IdxHi > 0)
 	assert.True(t, state.IdxLo > 0)
 	assert.True(t, state.Vol > 0)
 }
