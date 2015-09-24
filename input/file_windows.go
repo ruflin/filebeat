@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"syscall"
 
+	"fmt"
 	"github.com/elastic/libbeat/logp"
 )
 
@@ -80,12 +81,12 @@ func Open(path string, write bool) (*os.File, error) {
 	// This is mostly the code from syscall_windows::Open. Only difference is passing the Delete flag
 	// TODO: Open pull request to Golang so also Delete flag can be set
 	if len(path) == 0 {
-		return nil, syscall.ERROR_FILE_NOT_FOUND
+		return nil, fmt.Errorf("File '%s' not found. Error: %v", syscall.ERROR_FILE_NOT_FOUND)
 	}
 
 	pathp, err := syscall.UTF16PtrFromString(path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error converting to UTF16: %v", err)
 	}
 
 	var access uint32
@@ -101,7 +102,7 @@ func Open(path string, write bool) (*os.File, error) {
 	handle, err := syscall.CreateFile(pathp, access, sharemode, sa, createmode, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error creating file: %v", err)
 	}
 
 	return os.NewFile(uintptr(handle), path), nil
