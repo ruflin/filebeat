@@ -97,7 +97,12 @@ func Open(path string, write bool) (*os.File, error) {
 	var sa *syscall.SecurityAttributes
 
 	var createmode uint32
-	createmode = syscall.OPEN_EXISTING
+
+	if (write) {
+		createmode = syscall.CREATE_NEW
+	} else {
+		createmode = syscall.OPEN_EXISTING
+	}
 
 	handle, err := syscall.CreateFile(pathp, access, sharemode, sa, createmode, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 
