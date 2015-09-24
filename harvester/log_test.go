@@ -47,7 +47,7 @@ func TestReadLine(t *testing.T) {
 	file.Sync()
 
 	// Open file for reading
-	readFile, err := os.Open(logFile)
+	readFile, err := input.Open(logFile, false)
 	defer readFile.Close()
 	assert.Nil(t, err)
 
