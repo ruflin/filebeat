@@ -49,7 +49,7 @@ func Open(path string, write bool) (*os.File, error) {
 
 	perm = 0
 
-	if (write) {
+	if write {
 		flag = os.O_RDWR | os.O_CREATE | os.O_TRUNC
 		perm = 0666
 	}
