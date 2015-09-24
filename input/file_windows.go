@@ -78,6 +78,7 @@ func Open(path string, write bool) (*os.File, error) {
 	// As FILE_SHARE_DELETE cannot be passed to Open, os.CreateFile must be implemented directly
 
 	// This is mostly the code from syscall_windows::Open. Only difference is passing the Delete flag
+	// TODO: Open pull request to Golang so also Delete flag can be set
 	if len(path) == 0 {
 		return nil, syscall.ERROR_FILE_NOT_FOUND
 	}
