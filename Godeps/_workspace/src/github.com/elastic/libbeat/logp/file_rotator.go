@@ -147,7 +147,7 @@ func (rotator *FileRotator) Rotate() error {
 
 	// create the new file
 	file_path := rotator.FilePath(0)
-	current, err := os.Create(file_path)
+	current, err := Open(file_path, true)
 	if err != nil {
 		return err
 	}

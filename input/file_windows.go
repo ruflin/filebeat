@@ -98,7 +98,7 @@ func Open(path string, write bool) (*os.File, error) {
 
 	var createmode uint32
 
-	if (write) {
+	if write {
 		createmode = syscall.CREATE_NEW
 	} else {
 		createmode = syscall.OPEN_EXISTING
@@ -107,7 +107,7 @@ func Open(path string, write bool) (*os.File, error) {
 	handle, err := syscall.CreateFile(pathp, access, sharemode, sa, createmode, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 
 	if err != nil {
-		return nil, fmt.Errorf("Error creating file: %v", err)
+		return nil, fmt.Errorf("Error creating file '%s': %v", pathp, err)
 	}
 
 	return os.NewFile(uintptr(handle), path), nil
