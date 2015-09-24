@@ -46,7 +46,7 @@ func (r *Registrar) Init() {
 // The default file is .filebeat file which is stored in the same path as the binary is running
 func (r *Registrar) LoadState() {
 
-	if existing, e := os.Open(r.registryFile); e == nil {
+	if existing, e := input.Open(r.registryFile, false); e == nil {
 		defer existing.Close()
 		wd := ""
 		if wd, e = os.Getwd(); e != nil {
@@ -91,7 +91,7 @@ func (r *Registrar) writeRegistry() error {
 	logp.Debug("registrar", "Write registry file: %s", r.registryFile)
 
 	tempfile := r.registryFile + ".new"
-	file, e := os.Create(tempfile)
+	file, e := input.Open(tempfile, true)
 	if e != nil {
 		logp.Err("Failed to create tempfile (%s) for writing: %s", tempfile, e)
 		return e

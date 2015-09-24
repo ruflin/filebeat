@@ -3,6 +3,7 @@ package harvester
 import (
 	"bufio"
 	"bytes"
+	"github.com/elastic/filebeat/input"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"math/rand"
@@ -25,7 +26,7 @@ func TestReadLine(t *testing.T) {
 		t.Fatalf("Error creating the absolute path: %s", absPath)
 	}
 
-	file, err := os.Create(logFile)
+	file, err := input.Open(logFile, true)
 	defer file.Close()
 	defer os.Remove(logFile)
 
