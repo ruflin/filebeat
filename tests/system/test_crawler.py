@@ -200,7 +200,7 @@ class Test(TestCase):
 
         assert len(output) == 5 + 6
 
-    #@unittest.skipIf(os.name == "nt", "Watching log file currently not supported on Windows")
+    @unittest.skipIf(os.name == "nt", "Open old file doesn't work at the moment on windows")
     def test_file_disappear_appear(self):
         """
         Checks that filebeat keeps running in case a log files is deleted
