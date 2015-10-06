@@ -18,7 +18,8 @@ Questions:
      will be interpreted as config files and merged
 * Profiler option was removed as part of libbeat. Currently the profiler stopped after 60s. Should this be added to libbeat?
   Profiler options were also removed.
-```
+
+
 		go func() {
 			time.Sleep(60 * time.Second)
 			pprof.StopCPUProfile()
@@ -36,7 +37,7 @@ Questions:
 			fmt.Printf("recovered panic: %v", p)
 			os.Exit(exitStat.faulted)
 		}()
-```
+
 
 
 * Go trough error messages and check if the texts are good
@@ -45,7 +46,6 @@ Questions:
 * All command line options were also translated to config files options
 * Getting config from env was removed. I think a better method like getting it from es should be used: https://github.com/elastic/logstash-forwarder/pull/435
 * What should we do about multiple configs? Just provide some docs? https://github.com/elastic/logstash-forwarder/issues/136 currently working with -c for beat -config for dirs
-* Command line config option -config was renamed to configDir. Should also be introduced as config file param in case we want to keep it
 * Rethink dead-time: https://github.com/elastic/logstash-forwarder/issues/460
 * files config was renamed to prospectors as this makes more sense
 * spoolSize and idleTimeout as cmd line option removed
@@ -60,7 +60,18 @@ Notes:
 * On debug we should print out all config options on startup -> any good idea how to do this recursively?
 * Quiet option remove as logging is part of libbeat
 * TailOnRate config option implemented and removed from command line
+* cpuProfileFile options was removed -> part of libbeat
+* Add type options to config file per harvester
+
+     # * file: Sends the full file on change. This replaces fsRiver
+     # * meta: Reads new meta information on file change
 
 Next with priority
 * Multi line support
 * Filtering support
+** Filter option for every prospector:
+
+      # Regexp log line filter (not implemented yet)
+      filter: "regexp"
+
+

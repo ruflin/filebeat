@@ -22,8 +22,9 @@
 ###############################################################################
 
 # List of all platforms types. Comment out (with #) any platforms that you want
-# go-build-all to ignore.
+# nacl and plan9 are currently not compatible
 # If you want to build only a specific platform, set the PLATFORMS variable
+# go-build-all to ignore.
 : ${PLATFORMS:="
 linux-386
 linux-386-387
@@ -38,19 +39,19 @@ linux-ppc64le
 #nacl-arm
 darwin-386
 darwin-amd64
-#dragonfly-amd64
-#freebsd-386
-#freebsd-amd64
-#freebsd-arm
-#netbsd-386
-#netbsd-amd64
-#netbsd-arm
+dragonfly-amd64
+freebsd-386
+freebsd-amd64
+freebsd-arm
+netbsd-386
+netbsd-amd64
+netbsd-arm
 openbsd-386
 openbsd-amd64
 openbsd-arm
 #plan9-386
 #plan9-amd64
-#solaris-amd64
+solaris-amd64
 windows-386
 windows-amd64
 "}

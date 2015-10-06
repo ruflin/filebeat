@@ -26,9 +26,9 @@ filebeat:
       input: stdin
       # Paths is not required
   spoolSize: 1024
-  cpuProfileFile:
   idleTimeout: 5s
   tailOnRotate:
+  configDir: "/prospectorConfigs/"
 
 
 # Additional stuff we should be ignore
