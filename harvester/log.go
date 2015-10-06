@@ -105,7 +105,7 @@ func (h *Harvester) open() *os.File {
 
 	for {
 		var err error
-		h.file, err = os.Open(h.Path)
+		h.file, err = input.Open(h.Path, false)
 
 		if err != nil {
 			// TODO: This is currently end endless retry, should be set to a max?
