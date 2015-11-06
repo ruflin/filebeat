@@ -2,6 +2,7 @@ package harvester
 
 import (
 	"os"
+	"time"
 
 	"github.com/elastic/filebeat/config"
 	"github.com/elastic/filebeat/input"
@@ -16,6 +17,7 @@ type Harvester struct {
 	SpoolerChan      chan *input.FileEvent
 	encoding         Decoder
 	file             *os.File /* the file being watched */
+	backoff          time.Duration
 }
 
 // Interface for the different harvester types

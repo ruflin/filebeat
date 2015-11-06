@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file based on the
 - Add 'input_type' field to published events reporting the prospector type being used. #133
 - Fix high CPU usage when not connected to Elasticsearch or Logstash. #144
 - Fix issue that files were not crawled anymore when encoding was set to something other then plain. #182
+- Fix issue that for some encoding bytes count instead of rune count was used for offest which lead
+  to restart the file reading from the beginning.
 
 ### Added
 - Introduction of backoff, backoff_factor, max_backoff, partial_line_waiting, force_close_windows_files
