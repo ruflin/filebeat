@@ -13,7 +13,6 @@ import (
 	"github.com/elastic/filebeat/config"
 	"github.com/elastic/filebeat/input"
 	"github.com/elastic/libbeat/logp"
-	"unicode/utf8"
 )
 
 func NewHarvester(
@@ -78,7 +77,7 @@ func (h *Harvester) Harvest() {
 	lastReadTime := time.Now()
 
 	for {
-		text, bytesRead, err := readLine(reader, buffer, hConfig.PartialLineWaitingDuration)
+		text, err := readLine(reader, buffer, hConfig.PartialLineWaitingDuration)
 
 		if err != nil {
 
@@ -121,8 +120,13 @@ func (h *Harvester) Harvest() {
 
 		event.SetFieldsUnderRoot(h.Config.FieldsUnderRoot)
 
-		h.Offset += int64(bytesRead) // Update offset
-		h.SpoolerChan <- event       // ship the new event downstream
+		h.Offset, err = h.file.Seek(0, os.SEEK_CUR) // Update offset
+		if err != nil {
+			logp.Err("Error getting the current offset: %v. Stopping harverster", err)
+			return
+		}
+
+		h.SpoolerChan <- event // ship the new event downstream
 	}
 }
 
@@ -297,7 +301,7 @@ func lineEndingChars(line []byte) int {
 // readLine reads a full line into buffer and returns it.
 // In case of partial lines, readLine waits for a maximum of partialLineWaiting seconds for new segments to arrive.
 // This could potentialy be improved / replaced by https://github.com/elastic/libbeat/tree/master/common/streambuf
-func readLine(reader *bufio.Reader, buffer *bytes.Buffer, partialLineWaiting time.Duration) (*string, int, error) {
+func readLine(reader *bufio.Reader, buffer *bytes.Buffer, partialLineWaiting time.Duration) (*string, error) {
 
 	lastSegementTime := time.Now()
 	isPartialLine := true
@@ -318,7 +322,7 @@ func readLine(reader *bufio.Reader, buffer *bytes.Buffer, partialLineWaiting tim
 		if err != nil {
 			// EOF, jump out of the loop
 			if err == io.EOF {
-				return nil, 0, err
+				return nil, err
 			}
 
 			if isPartialLine {
@@ -327,12 +331,12 @@ func readLine(reader *bufio.Reader, buffer *bytes.Buffer, partialLineWaiting tim
 
 				// If last segment written is older then partialLineWaiting, partial line is discarded
 				if time.Since(lastSegementTime) >= partialLineWaiting {
-					return nil, 0, err
+					return nil, err
 				}
 				continue
 			} else {
 				logp.Err("Error reading line: %s", err.Error())
-				return nil, 0, err
+				return nil, err
 			}
 		}
 
@@ -340,15 +344,13 @@ func readLine(reader *bufio.Reader, buffer *bytes.Buffer, partialLineWaiting tim
 		if !isPartialLine {
 
 			str := buffer.String()
-			// Rune count is relevant as FileInfo.Size() returns also rune count
-			runeCount := utf8.RuneCountInString(str)
 
 			// Get the str length with the EOL chars (LF or CRLF) and remove the last bytes
 			str = str[:len(str)-lineEndingChars(segment)]
 			// Reset the buffer for the next line
 			buffer.Reset()
 
-			return &str, runeCount, nil
+			return &str, nil
 		}
 	}
 }

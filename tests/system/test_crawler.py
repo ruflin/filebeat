@@ -5,7 +5,6 @@ from filebeat import TestCase
 import codecs
 import os
 import time
-import unittest
 
 
 # Additional tests to be added:
@@ -205,7 +204,8 @@ class Test(TestCase):
         """
         Checks that filebeat keeps running in case a log files is deleted
 
-        On Windows this tests in addition if the file was closed as it couldn't be found anymore
+        On Windows this tests in addition if the file was closed as it couldn't
+        be found anymore.
         If Windows does not close the file, a new one can't be created.
         """
 
@@ -344,7 +344,7 @@ class Test(TestCase):
                 f.flush()
 
                 self.wait_until(
-                    lambda: self.output_has( lines_written + 1),
+                    lambda: self.output_has(lines_written + 1),
                     max_timeout=15)
 
         filebeat.kill_and_wait()
