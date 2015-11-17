@@ -74,6 +74,8 @@ func (s *Spooler) Run() {
 
 	s.spool = make([]*input.FileEvent, 0, config.SpoolSize)
 
+	logp.Info("Starting spooler. spool_size: %s; idle_timeout: %s", config.SpoolSize, config.IdleTimeoutDuration)
+
 	// Loops until running is set to false
 	for {
 		if !s.running {
@@ -84,17 +86,21 @@ func (s *Spooler) Run() {
 		case event := <-s.Channel:
 			s.spool = append(s.spool, event)
 
-			// Spooler is full -> flush
+		// Spooler is full -> flush
 			if len(s.spool) == cap(s.spool) {
+				logp.Debug("spooler", "Flushing spooler because spooler full. Events flushed: %s", len(s.spool))
 				s.flush()
 			}
 		case <-ticker.C:
-			// Flush periodically
+		// Flush periodically
 			if now := time.Now(); now.After(s.nextFlushTime) {
+				logp.Debug("spooler", "Flushing spooler because of timemout. Events flushed: %s", len(s.spool))
 				s.flush()
 			}
 		}
 	}
+
+	logp.Info("Stopping spooler")
 
 	// Flush again before exiting spooler and closes channel
 	s.flush()
