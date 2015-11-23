@@ -125,7 +125,7 @@ class Test(TestCase):
         os.mkdir(self.working_dir + "/log/")
 
         testfile = self.working_dir + "/log/test.log"
-        file = open(testfile, 'w')
+        file = open(testfile, 'w', 0)
         iterations = 5
         for n in range(0, iterations):
             file.write("hello world")  # 11 chars
