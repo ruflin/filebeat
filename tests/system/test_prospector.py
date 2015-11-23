@@ -113,3 +113,29 @@ class Test(TestCase):
 
         objs = self.read_output()
         assert len(objs) == iterations1+iterations2
+
+    def test_rotating_ignore_older(self):
+        self.render_config_template(
+            path=os.path.abspath(self.working_dir) + "/log/*",
+            ignoreOlder="0.2s",
+        )
+
+        proc = self.start_filebeat()
+
+        os.mkdir(self.working_dir + "/log/")
+
+        testfile = self.working_dir + "/log/test.log"
+        file = open(testfile, 'w')
+        iterations = 5
+        for n in range(0, iterations):
+            file.write("hello world")  # 11 chars
+            file.write("\n")  # 1 char
+            time.sleep(1)
+
+        file.close()
+
+        os.rename(testfile, testfile + str(time.time()))
+
+        self.wait_until(
+            lambda: self.output_has(lines=iterations),
+            max_timeout=15)
